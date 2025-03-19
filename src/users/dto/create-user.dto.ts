@@ -3,6 +3,8 @@ import { IsEmail, IsNotEmpty, IsString, Length, Matches } from 'class-validator'
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
+  @Matches(/^[A-ZÁ-Úa-zá-ú]+(\s[A-ZÁ-Úa-zá-ú]+)+$/, 
+    { message: 'It is necessary to fill in your first and last' })
   name: string;
 
   @IsEmail()
