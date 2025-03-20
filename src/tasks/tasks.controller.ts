@@ -1,34 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { TasksService } from './tasks.service';
+import { Controller, Post, Body, Param, ParseUUIDPipe, Get } from '@nestjs/common';
+import { TasksService } from '../tasks/tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { Task } from './entities/task.entity';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
+   @Get('project-tasks/:projectId')
+  async getTasksByProjectId(@Param('projectId') projectId: string): Promise<Task[]> {
+    return this.tasksService.findTasksByProjectId(projectId);
+  }
+
+  // Criar uma nova tarefa
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  async create(
+    @Body() createTaskDto: CreateTaskDto,
+    @Param('userId') userId: string,
+    @Param('projectId') projectId: string,
+  ): Promise<Task> {
+    return this.tasksService.create(createTaskDto, userId, projectId);
   }
 
-  @Get()
-  findAll() {
-    return this.tasksService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tasksService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(+id, updateTaskDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tasksService.remove(+id);
-  }
+  // Outros endpoints para listar, atualizar ou excluir tarefas podem ser adicionados aqui.
 }

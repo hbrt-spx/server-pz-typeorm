@@ -1,26 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { User } from 'src/users/entities/user.entity';
+import { Project } from 'src/projects/entities/project.entity';
+import { TaskStatus } from 'src/utils/task.status';
 
 @Injectable()
 export class TasksService {
-  create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+  constructor(
+    @InjectRepository(Task)
+    private readonly taskRepository: Repository<Task>,
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+
+    @InjectRepository(Project)
+    private readonly projectRepository: Repository<Project>,
+  ) {}
+
+  async findTasksByProjectId(projectId: string): Promise<Task[]> {
+    const project = await this.projectRepository.findOne({
+      where: {id: projectId}
+    });
+    if (!project) {
+      throw new Error('Projeto não encontrado');
+    }
+
+    // Buscar as tarefas associadas ao projeto
+    return this.taskRepository.find({
+      where: { project: { id: projectId } },
+      relations: ['project', 'responsible'], // Carregar as entidades associadas
+    });
   }
 
-  findAll() {
-    return `This action returns all tasks`;
-  }
+  async create(createTaskDto: CreateTaskDto, userId: string, projectId: string): Promise<Task> {
+    const { title, description, status = TaskStatus.PENDING } = createTaskDto;
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
-  }
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
-  }
+    const project = await this.projectRepository.findOne({ where: { id: projectId } });
+    if (!project) {
+      throw new NotFoundException(`Project with ID ${projectId} not found`);
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+    const task = this.taskRepository.create({
+      title,
+      description,
+      status,
+      responsible: user,
+      project,
+    });
+    return await this.taskRepository.save(task);
   }
 }

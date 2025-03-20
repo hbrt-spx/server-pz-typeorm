@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Project } from '../../projects/entities/project.entity'; 
-import { Task } from '../../tasks/entities/task.entity'; 
+import { Project } from "src/projects/entities/project.entity";
+import { Task } from "src/tasks/entities/task.entity";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -16,11 +16,15 @@ export class User {
   @Column()
   password: string;
 
-  
   @OneToMany(() => Project, project => project.user)
   projects: Project[];
 
-  
   @OneToMany(() => Task, task => task.responsible)
-  tasks: Task[];  
+  tasks: Task[];
+
+  @CreateDateColumn()
+    createdAt: Date;
+  
+  @UpdateDateColumn()
+    updatedAt: Date;
 }

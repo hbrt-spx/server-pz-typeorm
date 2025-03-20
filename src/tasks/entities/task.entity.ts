@@ -1,12 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
-import { Project } from '../../projects/entities/project.entity';
-import { TaskStatus } from 'src/utils/task.status';
+import { Project } from "src/projects/entities/project.entity";
+import { User } from "src/users/entities/user.entity";
+import { TaskStatus } from "src/utils/task.status";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Task {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 255 })
   title: string;
@@ -17,10 +17,10 @@ export class Task {
   @ManyToOne(() => User, user => user.tasks)
   responsible: User;
 
-  @ManyToOne(() => Project, project => project.user)
+  @ManyToOne(() => Project, project => project.tasks)
   project: Project;
 
-  @Column({ type: 'enum', enum: TaskStatus })
+  @Column({ type: 'enum', enum: TaskStatus, default: TaskStatus.PENDING })
   status: TaskStatus;
 
   @CreateDateColumn()

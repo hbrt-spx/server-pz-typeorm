@@ -1,14 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+import { Task } from "src/tasks/entities/task.entity";
+import { User } from "src/users/entities/user.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Project {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
 
-  @ManyToOne(() => User, (user) => user.projects)
+  @Column()
+  description: string;
+
+  @ManyToOne(() => User, user => user.projects, { nullable: false })
   user: User;
+
+  @OneToMany(() => Task, task => task.project)
+  tasks: Task[];
+
+  @CreateDateColumn()
+    createdAt: Date;
+  
+  @UpdateDateColumn()
+    updatedAt: Date;
 }
