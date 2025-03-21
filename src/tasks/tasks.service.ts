@@ -57,4 +57,12 @@ export class TasksService {
     });
     return await this.taskRepository.save(task);
   }
+
+  async deleteTask(taskId: string): Promise<void> {
+    const task = await this.taskRepository.findOne({ where: { id: taskId } });
+    if (!task) {
+      throw new NotFoundException(`Task with ID ${taskId} not found`);
+    }
+    await this.taskRepository.delete(taskId);
+  }
 }
