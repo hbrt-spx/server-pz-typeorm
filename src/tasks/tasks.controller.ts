@@ -15,8 +15,8 @@ export class TasksController {
   @Post()
   async create(
     @Body() createTaskDto: CreateTaskDto,
-    @Param('userId') userId: string,
-    @Param('projectId') projectId: string,
+    @Body('userId') userId: string,
+    @Body('projectId') projectId: string,
   ): Promise<Task> {
     return this.tasksService.create(createTaskDto, userId, projectId);
   }

@@ -17,7 +17,7 @@ import { AuthModule } from './auth/auth.module';
       type: 'postgres', 
       url: process.env.DATABASE_URL,
       entities: [User, Task, Project],
-      synchronize: true, // Apenas em desenvolvimento
+      synchronize: true,
     }),
     TypeOrmModule.forFeature([User, Task, Project]),
     AuthModule],

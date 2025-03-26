@@ -31,13 +31,13 @@ export class ProjectsController {
     return projects;
   }
 
-  // Rota para atualizar um projeto pelo ID
+ 
   // @Patch(':id')
   // async update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto): Promise<Project> {
   //   return this.projectsService.update(id, updateProjectDto);
   // }
 
-  // Rota para remover um projeto pelo ID
+  
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     return this.projectsService.remove(id);

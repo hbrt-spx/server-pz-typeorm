@@ -27,11 +27,9 @@ export class TasksService {
     if (!project) {
       throw new Error('Projeto não encontrado');
     }
-
-    // Buscar as tarefas associadas ao projeto
     return this.taskRepository.find({
       where: { project: { id: projectId } },
-      relations: ['project', 'responsible'], // Carregar as entidades associadas
+      relations: ['project'], 
     });
   }
 
@@ -53,7 +51,7 @@ export class TasksService {
       description,
       status,
       responsible: user,
-      project,
+      project: project,
     });
     return await this.taskRepository.save(task);
   }
