@@ -1,6 +1,6 @@
 import { Project } from "src/projects/entities/project.entity";
 import { User } from "src/users/entities/user.entity";
-import { TaskStatus } from "src/utils/task.status";
+import { TaskStatus } from "src/utils/task.status"; // Certifique-se de que esse enum está corretamente configurado
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()

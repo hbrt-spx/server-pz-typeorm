@@ -29,7 +29,7 @@ export class ProjectInvitationController {
   }
 
   // Listar convites pendentes de um usuário
-  @Get('user/:userId/pending')
+  @Get(':userId/pending')
   async getPendingInvitations(@Param('userId') userId: string): Promise<ProjectInvitation[]> {
     return this.invitationService.getPendingInvitations(userId);
   }

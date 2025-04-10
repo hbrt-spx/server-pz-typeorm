@@ -94,18 +94,24 @@ export class ProjectInvitationService {
 
   // Listar convites pendentes de um usuário
   async getPendingInvitations(userId: string): Promise<ProjectInvitation[]> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    // Buscar convites pendentes para o usuário
-    return this.invitationRepository.find({
-      where: { user: user, status: Status.PENDING },
-      relations: ['project'],
-    });
+  // Verificando se o usuário existe
+  const user = await this.userRepository.findOne({
+    where: { id: userId },
+  });
+  console.log('User', user)
+  if (!user) {
+    throw new NotFoundException('User not found');
   }
+
+  // Utilizando o QueryBuilder para buscar convites pendentes
+  const invitations = await this.invitationRepository
+    .createQueryBuilder('invitation')
+    .innerJoinAndSelect('invitation.project', 'project')
+    .where('invitation.user = :userId', { userId })
+    .andWhere('invitation.status = :status', { status: Status.PENDING })
+    .getMany();
+  console.log('invite', invitations)
+  return invitations;
+}
+
 }
