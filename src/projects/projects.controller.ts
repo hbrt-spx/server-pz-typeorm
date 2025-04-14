@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Request } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { Project } from './entities/project.entity';
@@ -22,15 +22,10 @@ export class ProjectsController {
     return this.projectsService.findOne(id);
   }
 
-  @Get('user-projects/:userId')
-  async findProjectsByUserId(@Param('userId') userId: string): Promise<Project[]> {
-    const projects = await this.projectsService.findProjectsByUserId(userId);
-    if (!projects || projects.length === 0) {
-      throw new NotFoundException(`No projects found for user with ID ${userId}`);
-    }
-    return projects;
-  }
-
+@Get('my-projects/:userId')
+async getRelatedProjects(@Param('userId') userId: string) {
+  return this.projectsService.getAllRelatedProjects(userId);
+}
  
   // @Patch(':id')
   // async update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto): Promise<Project> {

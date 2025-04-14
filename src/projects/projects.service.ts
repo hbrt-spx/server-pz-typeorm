@@ -53,16 +53,18 @@ export class ProjectsService {
     return project;
   }
 
-  async findProjectsByUserId(userId: string): Promise<Project[]> {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
-    }
-    return this.projectRepository.find({
-      where: { user: { id: userId } },
-      relations: ['user', 'tasks'],
-    });
-  }
+  async getAllRelatedProjects(userId: string): Promise<Project[]> {
+  return this.projectRepository
+    .createQueryBuilder('project')
+    .leftJoin('project.members', 'member')
+    .leftJoinAndSelect('project.user', 'owner') // opcional: info do dono
+    .leftJoinAndSelect('project.tasks', 'tasks') // opcional: tarefas
+    .where('project.user.id = :userId', { userId }) // projetos criados
+    .orWhere('member.id = :userId', { userId })     // ou que participa
+    .getMany();
+}
+
+
 
 
   // async update(id: string, updateProjectDto: UpdateProjectDto): Promise<Project> {

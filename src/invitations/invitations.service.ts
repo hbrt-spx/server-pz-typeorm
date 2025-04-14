@@ -65,12 +65,15 @@ export class ProjectInvitationService {
       throw new NotFoundException('Invitation not found');
     }
 
-    // Atualizando o status para aceito
-    invitation.status = Status.ACCEPTED;
-    invitation.accepted_at = new Date();
+    if (invitation.status !== Status.ACCEPTED) {
+  invitation.status = Status.ACCEPTED;
+  invitation.accepted_at = new Date();
 
-    // Salvar a atualização
-    return this.invitationRepository.save(invitation);
+  
+  invitation.project.members = [...(invitation.project.members || []), invitation.user];
+  await this.projectRepository.save(invitation.project);
+}
+return invitation
   }
 
   // Recusar um convite
@@ -98,7 +101,6 @@ export class ProjectInvitationService {
   const user = await this.userRepository.findOne({
     where: { id: userId },
   });
-  console.log('User', user)
   if (!user) {
     throw new NotFoundException('User not found');
   }
@@ -110,7 +112,6 @@ export class ProjectInvitationService {
     .where('invitation.user = :userId', { userId })
     .andWhere('invitation.status = :status', { status: Status.PENDING })
     .getMany();
-  console.log('invite', invitations)
   return invitations;
 }
 

@@ -1,7 +1,7 @@
 import { ProjectInvitation } from 'src/invitations/entities/invitation.entity'; // Importando convite
 import { Project } from "src/projects/entities/project.entity";
 import { Task } from "src/tasks/entities/task.entity";
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -20,6 +20,9 @@ export class User {
   // Relação com os projetos que o usuário criou
   @OneToMany(() => Project, project => project.user)
   projects: Project[];
+
+  @ManyToMany(() => Project, project => project.members)
+  projectsParticipating: Project[];
 
   // Relação com as tarefas que o usuário é responsável
   @OneToMany(() => Task, task => task.responsible)

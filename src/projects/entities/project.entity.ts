@@ -1,7 +1,7 @@
 import { Task } from "src/tasks/entities/task.entity";
 import { ProjectInvitation } from "src/invitations/entities/invitation.entity"; 
 import { User } from "src/users/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Project {
@@ -25,6 +25,14 @@ export class Project {
   // Relação com os convites para o projeto
   @OneToMany(() => ProjectInvitation, invitation => invitation.project)
   invitations: ProjectInvitation[];
+
+  @ManyToMany(() => User)
+  @JoinTable({
+  name: 'project_members',
+  joinColumn: { name: 'project_id', referencedColumnName: 'id' },
+  inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
+  })
+  members: User[];
 
   @CreateDateColumn()
   createdAt: Date;
