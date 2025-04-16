@@ -15,8 +15,7 @@ export class AuthController {
 
    @UseGuards(JwtAuthGuard)
   @Get('get-user')
-  async getUser(@Request() req) {
-    // O usuário é automaticamente disponibilizado no objeto req após a validação do guard
-    return req.user; // Retorna o usuário encontrado no token
+  async getUser(@Request() req) { 
+    return req.user;
   }
 }

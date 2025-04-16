@@ -1,5 +1,3 @@
-// src/invitations/dto/create-invitation.dto.ts
-
 import { IsString, IsEmail } from 'class-validator';
 
 export class CreateInvitationDto {

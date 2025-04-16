@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import { AuthService } from './auth.service';  // Importe o AuthService onde você verifica o JWT
+import { AuthService } from './auth.service'; 
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -9,12 +9,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET,  // Ou outro valor para a chave secreta
+      secretOrKey: process.env.JWT_SECRET, 
     });
   }
 
   async validate(payload: any) {
-    // Você pode pegar a informação do payload do JWT e usá-la para verificar no seu banco de dados
     return { userId: payload.sub, email: payload.email };
   }
 }

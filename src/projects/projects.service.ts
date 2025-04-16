@@ -57,10 +57,10 @@ export class ProjectsService {
   return this.projectRepository
     .createQueryBuilder('project')
     .leftJoin('project.members', 'member')
-    .leftJoinAndSelect('project.user', 'owner') // opcional: info do dono
-    .leftJoinAndSelect('project.tasks', 'tasks') // opcional: tarefas
-    .where('project.user.id = :userId', { userId }) // projetos criados
-    .orWhere('member.id = :userId', { userId })     // ou que participa
+    .leftJoinAndSelect('project.user', 'owner') 
+    .leftJoinAndSelect('project.tasks', 'tasks') 
+    .where('project.user.id = :userId', { userId }) 
+    .orWhere('member.id = :userId', { userId })
     .getMany();
 }
 

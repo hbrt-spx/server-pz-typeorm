@@ -14,15 +14,12 @@ export class Project {
   @Column()
   description: string;
 
-  // Relação com o usuário que criou o projeto (gerente/admin)
   @ManyToOne(() => User, user => user.projects, { nullable: false })
   user: User;
 
-  // Relação com as tarefas dentro do projeto
   @OneToMany(() => Task, task => task.project)
   tasks: Task[];
 
-  // Relação com os convites para o projeto
   @OneToMany(() => ProjectInvitation, invitation => invitation.project)
   invitations: ProjectInvitation[];
 

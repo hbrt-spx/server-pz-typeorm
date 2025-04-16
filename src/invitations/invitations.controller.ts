@@ -7,7 +7,6 @@ import { CreateInvitationDto } from './dto/create-invitation.dto';
 export class ProjectInvitationController {
   constructor(private readonly invitationService: ProjectInvitationService) {}
 
-  // Enviar convite para um usuário
   @Post(':projectId/invite')
   async inviteUserToProject(
     @Param('projectId') projectId: string,
@@ -16,19 +15,17 @@ export class ProjectInvitationController {
     return this.invitationService.inviteUserToProject(projectId, createInvitationDto.userEmail, createInvitationDto.invitedById);
   }
 
-  // Aceitar convite
+
   @Put(':invitationId/accept')
   async acceptInvitation(@Param('invitationId') invitationId: string): Promise<ProjectInvitation> {
     return this.invitationService.acceptInvitation(invitationId);
   }
 
-  // Recusar convite
   @Put(':invitationId/decline')
   async declineInvitation(@Param('invitationId') invitationId: string): Promise<ProjectInvitation> {
     return this.invitationService.declineInvitation(invitationId);
   }
 
-  // Listar convites pendentes de um usuário
   @Get(':userId/pending')
   async getPendingInvitations(@Param('userId') userId: string): Promise<ProjectInvitation[]> {
     return this.invitationService.getPendingInvitations(userId);
