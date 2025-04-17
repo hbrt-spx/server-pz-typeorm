@@ -68,6 +68,7 @@ export class ProjectInvitationService {
   
   invitation.project.members = [...(invitation.project.members || []), invitation.user];
   await this.projectRepository.save(invitation.project);
+  await this.projectRepository.save(invitation)
 }
 return invitation
   }
